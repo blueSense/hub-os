@@ -8,7 +8,9 @@ mkdir -p "$(dirname "$DEST")"
 echo "nameserver 8.8.8.8" > "${DEST}"
 systemctl enable systemd-resolved
 
-pacman -Sy --noconfirm --needed openssh sudo bsn
+pacman -Sy --noconfirm --needed openssh sudo bsn-autoupdate
+
+bsn-autoupdate --onetime --no-start
 
 ssh-keygen -A
 
