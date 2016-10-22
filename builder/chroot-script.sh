@@ -8,11 +8,14 @@ mkdir -p "$(dirname "$DEST")"
 echo "nameserver 8.8.8.8" > "${DEST}"
 systemctl enable systemd-resolved
 
-pacman -Sy --noconfirm --needed openssh sudo bsn-autoupdate
+cat >> /etc/pacman.conf <<- EOF
+[bsn]
+Server = http://packages.bluesense.co
+EOF
 
-bsn-autoupdate --onetime --no-start
-
+pacman -Sy --noconfirm --needed puppet openssh sudo bsn-base
 ssh-keygen -A
+systemctl enable bsn-firstboot
 
 # add user and add him to the group that is the same as his username
 useradd --create-home --user-group "$USERNAME"
@@ -22,6 +25,7 @@ fi
 
 mkdir /home/$USERNAME/.ssh
 echo "$SSH_KEY" > /home/$USERNAME/.ssh/authorized_keys
+chown -R $USERNAME:$USERNAME /home/$USERNAME
 
 echo "$USERNAME ALL=NOPASSWD: ALL" > "/etc/sudoers.d/user-$USERNAME"
 chmod 0440 "/etc/sudoers.d/user-$USERNAME"
@@ -31,3 +35,10 @@ userdel -r alarm
 
 # append build metadata for debugging
 echo "BUILD_NUMBER=$BUILD_NUMBER" > /etc/bsn-release
+
+mkdir -p /etc/puppetlabs/facter/facts.d
+cat > /etc/puppetlabs/facter/facts.d/bsn.yaml <<- EOF
+---
+project: ${PROJECT}
+build_number: ${BUILD_NUMBER}
+EOF
