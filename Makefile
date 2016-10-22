@@ -17,6 +17,8 @@ ifeq ($(wildcard archlinux-latest/ArchLinuxARM-rpi-2-latest.tar.gz),)
 	wget -O archlinux-latest/ArchLinuxARM-rpi-2-latest.tar.gz https://archlinuxarm.org/os/ArchLinuxARM-rpi-2-latest.tar.gz
 endif
 
-rpi2: clean download-archlinux-latest build-docker-image require-USER_NAME require-USER_SSH_KEY
-	docker run -e USERNAME="$(USER_NAME)" -e PASSWORD="$(USER_PASSWORD)" -e SSH_KEY="$(USER_SSH_KEY)" -e BUILD_NUMBER="$(BUILD_NUMBER)" \
-		 --net=host --rm -v $(shell pwd)/build:/image -v $(shell pwd)/archlinux-latest:/archlinuxlatest --privileged rootfs-builder
+rpi2: clean download-archlinux-latest build-docker-image require-USER_NAME require-USER_SSH_KEY require-DEFAULT_HOSTNAME require-HOSTNAME_PREFIX require-PROJECT
+	docker run \
+		-e USERNAME="$(USER_NAME)" -e PASSWORD="$(USER_PASSWORD)" -e SSH_KEY="$(USER_SSH_KEY)" -e BUILD_NUMBER="$(BUILD_NUMBER)" \
+		-e DEFAULT_HOSTNAME="${DEFAULT_HOSTNAME}" -e HOSTNAME_PREFIX="${HOSTNAME_PREFIX}" -e PROJECT="${PROJECT}" \
+		--net=host --rm -v $(shell pwd)/build:/image -v $(shell pwd)/archlinux-latest:/archlinuxlatest --privileged rootfs-builder

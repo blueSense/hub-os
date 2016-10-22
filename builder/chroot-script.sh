@@ -42,3 +42,6 @@ cat > /etc/puppetlabs/facter/facts.d/bsn.yaml <<- EOF
 project: ${PROJECT}
 build_number: ${BUILD_NUMBER}
 EOF
+
+echo $DEFAULT_HOSTNAME > /etc/hostname
+sed -i "/^\[Hostname\]$/,/^\[/ s/^prefix = .*/prefix = ${HOSTNAME_PREFIX}/" /etc/bsn/bsn.ini

@@ -27,6 +27,9 @@ chroot "$ROOTFS_DIR" /bin/env -i \
   PASSWORD="$PASSWORD" \
   SSH_KEY="$SSH_KEY" \
   BUILD_NUMBER="$BUILD_NUMBER" \
+  PROJECT="$PROJECT" \
+  DEFAULT_HOSTNAME="$DEFAULT_HOSTNAME" \
+  HOSTNAME_PREFIX="$HOSTNAME_PREFIX" \
   /bin/bash < /builder/chroot-script.sh
 
 # unmount pseudo filesystems
