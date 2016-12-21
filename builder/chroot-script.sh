@@ -13,7 +13,7 @@ cat >> /etc/pacman.conf <<- EOF
 Server = http://packages.bluesense.co
 EOF
 
-pacman -Sy --noconfirm --needed puppet openssh sudo bsn-base
+pacman -Sy --noconfirm --needed puppet openssh sudo bsn-base wget git
 ssh-keygen -A
 systemctl enable bsn-firstboot
 
